@@ -1,0 +1,41 @@
+//Alternate LEDs from Off, Green, and Red
+#include <msp430.h>
+#include "libTimer.h"
+#include "led.h"
+
+short state = 0;
+short ledState = 0;
+short secCount = 0;
+
+int main(void) {
+  P1DIR |= LEDS;
+  P1OUT &= ~LED_GREEN;
+  P1OUT |= LED_RED;
+
+  configureClocks();
+  enableWDTInterrupts();
+  
+  or_sr(0x18);
+}
+
+
+
+void advance_250th(){
+  static short secCount=0;
+  static short ledState=0;
+  secCount++;
+  if(secCount == 250){ /*one second has passed */
+    secCount = 0;
+    switch(ledState){
+    case 0: P1OUT |= LED_RED; P1OUT &=~LED_GREEN; ledState=1; break;
+    case 1: P1OUT |= LED_GREEN; P1OUT &=~LED_RED; ledState=0; break;
+    }
+  }
+}
+
+void
+__interrupt_vec(WDT_VECTOR) WDT()	/* 250 interrupts/sec */
+{
+  advance_250th();
+} 
+
