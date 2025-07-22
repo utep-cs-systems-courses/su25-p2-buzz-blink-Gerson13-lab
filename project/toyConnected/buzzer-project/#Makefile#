@@ -1,4 +1,4 @@
-# makfile configuration
+               # makfile configuration
 COMMON_OBJECTS  = 
 CPU             = msp430g2553
 CFLAGS          = -mmcu=${CPU} -I../h -L/opt/ti/msp430_gcc/include
@@ -21,5 +21,3 @@ clean: $^
 
 buzzer.c: buzzer.h
 buzzerMain.c: buzzer.h
-
-
